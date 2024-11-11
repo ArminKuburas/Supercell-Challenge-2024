@@ -42,3 +42,8 @@ void Weapon::draw(sf::RenderTarget &target, sf::RenderStates states) const
     graphicsRect.setPosition(getPosition());
     target.draw(graphicsRect);
 }
+
+void Weapon::reset()
+{
+	setActive(false);
+}

@@ -1,9 +1,11 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <memory>
+#include <functional>
 #include "Constants.h"
 
 class Player;
@@ -42,6 +44,9 @@ public:
 
     void vampireSpawner(float deltaTime);
 
+    using ResetCallback = std::function<void(sf::RenderWindow&)>;
+	void setResetCallback(ResetCallback callback);
+
 private:
     std::unique_ptr<Player> m_pPlayer;
 
@@ -58,4 +63,5 @@ private:
     sf::Font m_font;
     sf::Texture m_vampTexture;
     sf::Texture m_playerTexture;
+	ResetCallback m_resetCallback;
 };

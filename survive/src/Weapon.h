@@ -13,6 +13,7 @@ public:
     bool isActive() { return m_isActive; }
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void reset();
 
 private:
     bool m_isActive = false;

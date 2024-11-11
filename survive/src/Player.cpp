@@ -10,6 +10,7 @@ Player::Player(Game* pGame) :
     m_pGame(pGame),
     m_pWeapon(std::make_unique<Weapon>())
 {
+	PlayerSpeed = 155.0f;
     setOrigin(sf::Vector2f(0.0f, 0.0f));
 }
 
