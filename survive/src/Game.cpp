@@ -55,7 +55,6 @@ bool Game::initialise()
 void Game::resetLevel()
 {
     m_pVampires.clear();
-
     m_pPlayer->initialise();
     m_pClock->restart();
 }

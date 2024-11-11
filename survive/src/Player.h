@@ -44,4 +44,7 @@ private:
     Game*   m_pGame;
     std::unique_ptr<Weapon> m_pWeapon;
 	eDirection old_direction = LEFT;
+	float PlayerHeight = 55.0f;
+	float PlayerWidth = 55.0f;
+	float PlayerSpeed = 155.0f;
 };
