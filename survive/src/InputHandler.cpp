@@ -1,6 +1,7 @@
 #include "InputHandler.h"
 #include "Weapon.h"
 #include "Player.h"
+#include "Game.h"
 
 GameInput::GameInput(Game* pGame, Player* pPlayer) :
     m_pGame(pGame), m_pPlayer(pPlayer)
@@ -21,9 +22,14 @@ void GameInput::update(float deltaTime)
         m_pPlayer->move(m_inputData, deltaTime);
     }
 
-    if (m_inputData.m_space)
+    if (m_timeSinceLastAttack > 0.0f)
+	{
+		m_timeSinceLastAttack -= deltaTime;
+	}
+	else
     {
         m_pPlayer->attack();
+		m_timeSinceLastAttack = m_attackCooldown;
     }
 }
 
@@ -45,10 +51,6 @@ void GameInput::onKeyPressed(sf::Keyboard::Key key)
     {
         m_inputData.m_movingRight = true;
     }
-    else if (key == sf::Keyboard::Space)
-    {
-        m_inputData.m_space = true;
-    }
 }
 
 void GameInput::onKeyReleased(sf::Keyboard::Key key)
@@ -68,9 +70,5 @@ void GameInput::onKeyReleased(sf::Keyboard::Key key)
     else if (key == sf::Keyboard::Right)
     {
         m_inputData.m_movingRight = false;
-    }
-    else if (key == sf::Keyboard::Space)
-    {
-        m_inputData.m_space = false;
     }
 }

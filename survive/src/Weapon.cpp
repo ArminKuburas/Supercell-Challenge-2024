@@ -46,4 +46,5 @@ void Weapon::draw(sf::RenderTarget &target, sf::RenderStates states) const
 void Weapon::reset()
 {
 	setActive(false);
+	WeaponWidth = 100.0f;
 }

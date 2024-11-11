@@ -20,6 +20,12 @@ Game::Game() :
 	old_time(0.0f)
 {
     m_pGameInput = std::make_unique<GameInput>(this, m_pPlayer.get());
+	m_upgrades ={
+		{"Health Upgrade", [](Player& player) {player.setHealth(player.getHealth() + 1); }},
+		{"Speed Upgrade", [](Player& player) {player.setSpeed(player.getSpeed() + 1); }},
+		{"Attack Speed Upgrade", [](Player& player) {player.setAttackSpeed(player.getAttackSpeed() - 0.25f); }},
+		{"Whip Length Upgrade", [](Player& player) {player.setWhipLength(player.getWhipLength() + 1); }}
+	};
 }
 
 Game::~Game()
@@ -199,7 +205,7 @@ const sf::Font* Game::getFont() const
 
 void Game::pauseGame(enum ePauseState pauseState)
 {
-	if (pauseState == PAUSED)
+	if (pauseState == ePauseState::PAUSED)
 	{
 		old_time += m_pClock->getElapsedTime().asSeconds();
 	}
@@ -207,4 +213,70 @@ void Game::pauseGame(enum ePauseState pauseState)
 	{
 		m_pClock->restart();
 	}
+}
+
+bool Game::upgradePlayer(sf::RenderWindow& window)
+{
+	std::vector<Upgrade> selectedUpgrades;
+	std::sample(m_upgrades.begin(), m_upgrades.end(), std::back_inserter(selectedUpgrades), 3, std::mt19937{std::random_device{}()});
+
+	for (int i = 0; i < selectedUpgrades.size(); i++)
+	{
+		sf::Text upgradeText;
+		upgradeText.setFont(m_font);
+		upgradeText.setFillColor(sf::Color::White);
+		upgradeText.setStyle(sf::Text::Bold);
+		upgradeText.setString(std::to_string(i + 1) + ": " + selectedUpgrades[i].description);
+		upgradeText.setPosition(sf::Vector2f(400, 100 + (i * 30)));
+		window.draw(upgradeText);
+	}
+	window.display();
+	std::cout << "Upgrade Screen inside upgrade player function" << std::endl;
+
+	onKeyReleased(sf::Keyboard::Key::Up);
+	onKeyReleased(sf::Keyboard::Key::Down);
+	onKeyReleased(sf::Keyboard::Key::Left);
+	onKeyReleased(sf::Keyboard::Key::Right);
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			std::cout << "Upgrade Screen inside upgrade player function while loop" << std::endl;
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::Num1)
+				{
+					std::cout << "1" << std::endl;
+					selectedUpgrades[0].apply(*m_pPlayer);
+					return true;
+				}
+				else if (event.key.code == sf::Keyboard::Num2)
+				{
+					std::cout << "2" << std::endl;
+					selectedUpgrades[1].apply(*m_pPlayer);
+					return true;
+				}
+				else if (event.key.code == sf::Keyboard::Num3)
+				{
+					std::cout << "3" << std::endl;
+					selectedUpgrades[2].apply(*m_pPlayer);
+					return true;
+				}
+				else if (event.key.code == sf::Keyboard::Escape)
+				{
+					std::cout << "Escape" << std::endl;
+					window.close();
+					return false;
+				}
+			}
+			else if (event.type == sf::Event::Closed)
+			{
+				std::cout << "Closed" << std::endl;
+				window.close();
+				return false;
+			}
+		}
+	}
+	return false;
 }

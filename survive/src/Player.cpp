@@ -21,6 +21,9 @@ bool Player::initialise()
     setIsDead(false);
     setPosition(ScreenWidth / 2, ScreenHeight / 2);
     m_sprite.setPosition(getPosition());
+	m_health = 1;
+	PlayerSpeed = 155.0f;
+	setAttackSpeed(1.25f);
     return true;
 }
 
@@ -101,4 +104,28 @@ void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     Rectangle::draw(target, states);
     m_pWeapon->draw(target, states);
+}
+
+void Player::setIsDead(bool isDead)
+{
+	if (isDead)
+	{
+		m_health--;
+		if (m_health <= 0)
+		{
+			m_isDead = isDead;
+		}
+	}
+	else
+		m_isDead = isDead;
+}
+
+void Player::setAttackSpeed(float attackSpeed)
+{
+	m_pGame->getGameInput()->setAttackCooldown(attackSpeed);
+}
+
+float Player::getAttackSpeed()
+{
+	return m_pGame->getGameInput()->getAttackCooldown();
 }

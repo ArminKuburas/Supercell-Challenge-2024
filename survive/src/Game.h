@@ -7,9 +7,12 @@
 #include <memory>
 #include <functional>
 #include "Constants.h"
+#include "Upgrade.h"
+#include "InputHandler.h"
+#include <random>
+#include <algorithm>
 
 class Player;
-class Game;
 class GameInput;
 class Vampire;
 
@@ -34,6 +37,7 @@ public:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     
     State getState() const { return m_state; }
+	GameInput* getGameInput() { return m_pGameInput.get(); }
     
     void onKeyPressed(sf::Keyboard::Key key);
     void onKeyReleased(sf::Keyboard::Key key);
@@ -41,11 +45,15 @@ public:
     Player* getPlayer() const;
     sf::Texture* getPlayerTexture() { return &m_playerTexture; }
     sf::Texture* getVampireTexture() { return &m_vampTexture; }
+	bool upgradePlayer(sf::RenderWindow& window);
 
     void vampireSpawner(float deltaTime);
 
 	const sf::Font* getFont() const;
 	void pauseGame(enum ePauseState pauseState);
+	float getTime() { return old_time + m_pClock->getElapsedTime().asSeconds(); }
+
+
 
 private:
     std::unique_ptr<Player> m_pPlayer;
@@ -64,4 +72,6 @@ private:
     sf::Font m_font;
     sf::Texture m_vampTexture;
     sf::Texture m_playerTexture;
+
+	std::vector<Upgrade> m_upgrades;
 };

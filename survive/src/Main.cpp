@@ -4,12 +4,14 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include "Game.h"
+#include <vector>
 #include <memory>
 #include <iostream>
 
 #include "ResourceManager.h"
 
 void handleKeyPress(sf::RenderWindow& window, std::unique_ptr<Game>& pGame, sf::Keyboard::Key key, sf::Clock& clock);
+void upgradeScreen(sf::RenderWindow& window, std::unique_ptr<Game>& pGame, sf::Clock& clock);
 
 int main(int argc, char* argv[])
 {
@@ -26,6 +28,7 @@ int main(int argc, char* argv[])
     }
     
     sf::Clock clock;
+	int upgradeTime = 1;
     // run the program as long as the window is open
     while (window.isOpen())
     {
@@ -61,11 +64,35 @@ int main(int argc, char* argv[])
         
         // end the current frame
         window.display();
+		if ((int)pGame->getTime() > upgradeTime * 5)
+		{
+			std::cout << "Upgrade Screen" << std::endl;
+			upgradeScreen(window, pGame, clock);
+			upgradeTime += 1;
+		}
     }
     
     return 0;
 }
 
+
+void upgradeScreen(sf::RenderWindow& window, std::unique_ptr<Game>& pGame, sf::Clock& clock)
+{
+	sf::Text upgradeText;
+	upgradeText.setFont(*pGame->getFont());
+	upgradeText.setFillColor(sf::Color::White);
+	upgradeText.setStyle(sf::Text::Bold);
+	upgradeText.setString("Upgrade Screen: To select an upgrade, press the corresponding number key.");
+	upgradeText.setPosition(sf::Vector2f(400, 60));
+	window.draw(upgradeText);
+	window.display();
+	pGame->pauseGame(ePauseState::PAUSED);
+	std::cout << "Upgrade Screen" << std::endl;
+	pGame->upgradePlayer(window);
+	std::cout << "Upgrade Screen" << std::endl;
+	clock.restart();
+	pGame->pauseGame(ePauseState::UNPAUSED);
+}
 
 void handleKeyPress(sf::RenderWindow& window, std::unique_ptr<Game>& pGame, sf::Keyboard::Key key, sf::Clock& clock)
 {
