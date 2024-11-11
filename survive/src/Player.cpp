@@ -40,13 +40,27 @@ void Player::move(InputData inputData, float deltaTime)
     setPosition(std::clamp(getPosition().x, 0.0f, (float)ScreenWidth), getPosition().y);
 
     if (inputData.m_movingLeft && !inputData.m_movingRight)
+	{
         m_direction = LEFT;
+		old_direction = LEFT;
+	}
     else if (!inputData.m_movingLeft && inputData.m_movingRight)
+	{
         m_direction = RIGHT;
+		old_direction = RIGHT;
+	}
     else if (inputData.m_movingUp && !inputData.m_movingDown)
         m_direction = UP;
     else if (!inputData.m_movingUp && inputData.m_movingDown)
         m_direction = DOWN;
+	else if (inputData.m_movingUp && inputData.m_movingLeft)
+		m_direction = UP_LEFT;
+	else if (inputData.m_movingUp && inputData.m_movingRight)
+		m_direction = UP_RIGHT;
+	else if (inputData.m_movingDown && inputData.m_movingLeft)
+		m_direction = DOWN_LEFT;
+	else if (inputData.m_movingDown && inputData.m_movingRight)
+		m_direction = DOWN_RIGHT;
 }
 
 void Player::attack()
@@ -59,10 +73,27 @@ void Player::update(float deltaTime)
     sf::Vector2f weaponSize = m_pWeapon->getSize();
 
     m_sprite.setPosition(getPosition());
-    m_pWeapon->setPosition(sf::Vector2f(
-        getCenter().x - (m_direction == LEFT ? weaponSize.x : 0.0f),
-        getCenter().y - weaponSize.y / 2.0f));
-    m_pWeapon->update(deltaTime);
+	if (m_direction == LEFT || m_direction == UP_LEFT || m_direction == DOWN_LEFT) {
+		m_pWeapon->setPosition(sf::Vector2f(
+			getCenter().x - weaponSize.x,
+			getCenter().y - weaponSize.y / 2.0f));
+	} else if (m_direction == RIGHT || m_direction == UP_RIGHT || m_direction == DOWN_RIGHT) {
+		m_pWeapon->setPosition(sf::Vector2f(
+			getCenter().x,
+			getCenter().y - weaponSize.y / 2.0f));
+	}
+	else if (m_direction == UP || m_direction == DOWN) {
+		if (old_direction == LEFT) {
+			m_pWeapon->setPosition(sf::Vector2f(
+				getCenter().x - weaponSize.x,
+				getCenter().y - weaponSize.y / 2.0f));
+		} else if (old_direction == RIGHT) {
+			m_pWeapon->setPosition(sf::Vector2f(
+				getCenter().x,
+				getCenter().y - weaponSize.y / 2.0f));
+		}
+	}
+	m_pWeapon->update(deltaTime);
 }
 
 void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const

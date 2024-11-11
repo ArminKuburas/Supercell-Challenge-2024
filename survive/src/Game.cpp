@@ -62,6 +62,8 @@ void Game::resetLevel()
 
 void Game::update(float deltaTime)
 {
+	std::cout << "Game::update" << std::endl;
+	std::cout << "deltaTime: " << deltaTime << std::endl;
     switch (m_state)
     {
         case State::WAITING:
@@ -89,6 +91,7 @@ void Game::update(float deltaTime)
             {
                 m_state = State::WAITING;
                 resetLevel();
+				this->m_nextVampireCooldown = 2.0f;
             }
         }
         break;
@@ -183,7 +186,7 @@ void Game::vampireSpawner(float deltaTime)
     m_pVampires.push_back(std::make_unique<Vampire>(this, spawnPosition));
 
     m_spawnCount++;
-    if (m_spawnCount % 5 == 0)
+    if (m_spawnCount % 5 == 0 || m_nextVampireCooldown < 0.5f)
     {
         m_nextVampireCooldown -= 0.1f;
     }

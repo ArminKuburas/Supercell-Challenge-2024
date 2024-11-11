@@ -14,7 +14,11 @@ enum eDirection
     LEFT,
     RIGHT,
     UP,
-    DOWN
+    DOWN,
+	UP_LEFT,
+	UP_RIGHT,
+	DOWN_LEFT,
+	DOWN_RIGHT
 };
 
 class Player : public Rectangle
@@ -39,4 +43,5 @@ private:
     eDirection m_direction = LEFT;
     Game*   m_pGame;
     std::unique_ptr<Weapon> m_pWeapon;
+	eDirection old_direction = LEFT;
 };
