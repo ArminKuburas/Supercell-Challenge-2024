@@ -21,10 +21,10 @@ Game::Game() :
 {
     m_pGameInput = std::make_unique<GameInput>(this, m_pPlayer.get());
 	m_upgrades ={
-		{"Health Upgrade", [](Player& player) {player.setHealth(player.getHealth() + 1); }},
-		{"Speed Upgrade", [](Player& player) {player.setSpeed(player.getSpeed() + 1); }},
-		{"Attack Speed Upgrade", [](Player& player) {player.setAttackSpeed(player.getAttackSpeed() - 0.25f); }},
-		{"Whip Length Upgrade", [](Player& player) {player.setWhipLength(player.getWhipLength() + 1); }}
+		{"Health Upgrade", [](Player& player) {player.setHealth(player.getHealth() + 2); },},
+		{"Speed Upgrade", [](Player& player) {player.setSpeed(player.getSpeed() + 10); }},
+		{"Attack Speed Upgrade", [](Player& player) {player.setAttackSpeed(player.getAttackSpeed() - 0.15f); }},
+		{"Whip Length Upgrade", [](Player& player) {player.setWhipLength(player.getWhipLength() + 20); }}
 	};
 }
 

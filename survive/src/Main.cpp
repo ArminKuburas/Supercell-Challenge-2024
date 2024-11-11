@@ -66,7 +66,6 @@ int main(int argc, char* argv[])
         window.display();
 		if ((int)pGame->getTime() > upgradeTime * 5)
 		{
-			std::cout << "Upgrade Screen" << std::endl;
 			upgradeScreen(window, pGame, clock);
 			upgradeTime += 1;
 		}
@@ -78,11 +77,17 @@ int main(int argc, char* argv[])
 
 void upgradeScreen(sf::RenderWindow& window, std::unique_ptr<Game>& pGame, sf::Clock& clock)
 {
+	static int upgradeAmount = 0;
+	upgradeAmount++;
+	if (upgradeAmount > 5)
+	{
+		return;
+	}
 	sf::Text upgradeText;
 	upgradeText.setFont(*pGame->getFont());
 	upgradeText.setFillColor(sf::Color::White);
 	upgradeText.setStyle(sf::Text::Bold);
-	upgradeText.setString("Upgrade Screen: To select an upgrade, press the corresponding number key.");
+	upgradeText.setString("To select an upgrade, press the corresponding number key. 5 upgrades max!");
 	upgradeText.setPosition(sf::Vector2f(400, 60));
 	window.draw(upgradeText);
 	window.display();
