@@ -16,7 +16,8 @@ Game::Game() :
     m_pClock(std::make_unique<sf::Clock>()),
     m_pPlayer(std::make_unique<Player>(this)),
     m_vampireCooldown(2.0f),
-    m_nextVampireCooldown(2.0f)
+    m_nextVampireCooldown(2.0f),
+	old_time(0.0f)
 {
     m_pGameInput = std::make_unique<GameInput>(this, m_pPlayer.get());
 }
@@ -62,8 +63,6 @@ void Game::resetLevel()
 
 void Game::update(float deltaTime)
 {
-	std::cout << "Game::update" << std::endl;
-	std::cout << "deltaTime: " << deltaTime << std::endl;
     switch (m_state)
     {
         case State::WAITING:
@@ -129,7 +128,7 @@ void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const
         timerText.setFont(m_font);
         timerText.setFillColor(sf::Color::White);
         timerText.setStyle(sf::Text::Bold);
-        timerText.setString(std::to_string((int)m_pClock->getElapsedTime().asSeconds()));
+        timerText.setString(std::to_string((int)m_pClock->getElapsedTime().asSeconds() + (int)old_time));
         timerText.setPosition(sf::Vector2f((ScreenWidth - timerText.getLocalBounds().getSize().x) * 0.5, 20));
         target.draw(timerText);
     }
@@ -191,4 +190,21 @@ void Game::vampireSpawner(float deltaTime)
         m_nextVampireCooldown -= 0.1f;
     }
     m_vampireCooldown = m_nextVampireCooldown;
+}
+
+const sf::Font* Game::getFont() const
+{
+    return &m_font;
+}
+
+void Game::pauseGame(enum ePauseState pauseState)
+{
+	if (pauseState == PAUSED)
+	{
+		old_time += m_pClock->getElapsedTime().asSeconds();
+	}
+	else
+	{
+		m_pClock->restart();
+	}
 }

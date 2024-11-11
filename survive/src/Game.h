@@ -44,8 +44,8 @@ public:
 
     void vampireSpawner(float deltaTime);
 
-    using ResetCallback = std::function<void(sf::RenderWindow&)>;
-	void setResetCallback(ResetCallback callback);
+	const sf::Font* getFont() const;
+	void pauseGame(enum ePauseState pauseState);
 
 private:
     std::unique_ptr<Player> m_pPlayer;
@@ -59,9 +59,9 @@ private:
     float m_vampireCooldown = 0.0f;
     float m_nextVampireCooldown = 2.0f;
     int m_spawnCount = 0;
+	float old_time = 0.0f;
     
     sf::Font m_font;
     sf::Texture m_vampTexture;
     sf::Texture m_playerTexture;
-	ResetCallback m_resetCallback;
 };
